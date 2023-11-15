@@ -40,7 +40,24 @@ router.get("/love/list", isBot, async (req, res) => {
 });
 
 router.delete("/love/exit", isBot, async (req, res) => {
+  const { user_id } = req.body;
 
+  try {
+    const removeAllSchedule = await Love.find({ user_id: user_id });
+
+    if(removeAllSchedule.length > 0) {
+      removeAllSchedule.map(async (item) => {
+        const { _id } = item;
+        await Love.findByIdAndDelete(_id);
+      });
+
+      res.status(200).json({ message: 'All things are good' });
+    }
+    else {
+      res.status(200).json({ message: 'All things are good' });
+    }
+  }
+  catch(error) { res.status(500); }
 });
 
 module.exports = router;
