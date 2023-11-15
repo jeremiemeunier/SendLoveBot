@@ -3,50 +3,45 @@ const { Events } = require('discord.js');
 const { logsEmiter } = require('../../../functions/logs');
 const axios = require('axios');
 
-let client;
+const commandSendLove = (client) => {
+  client.on(Events.InteractionCreate, async interaction => {
+      if (!interaction.isChatInputCommand()) return;
+          const { commandName } = interaction;
+      
+      if(commandName === 'love') {
+        const hours = interaction.options.getInteger('hours').toString();
+        const minutes = interaction.options.getInteger('minutes').toString();
+        const user = interaction.user.id;
 
-const commandSendLove = (clientItem) => {
-
-    client = clientItem;
-
-    client.on(Events.InteractionCreate, async interaction => {
-        if (!interaction.isChatInputCommand()) return;
-            const { commandName } = interaction;
-        
-        if(commandName === 'love') {
-          const hours = interaction.options.getInteger('hours').toString();
-          const minutes = interaction.options.getInteger('minutes').toString();
-          const user = interaction.user.id;
-
-          try {
-            const addNewLovers = await axios({
-              method: "post",
-              url: "/love/add",
-              baseURL: `http://localhost:${PORT}`,
-              headers: {
-                "botid": BOT_ID
-              },
-              data: {
-                  user_id: user,
-                  hours: hours,
-                  minutes: minutes
-              }
-            });
-
-            if(addNewLovers.status === 200) {
-              interaction.reply({
-                content: `Je t'enverrais du love tout les jours à ${hours}:${minutes}`
-              });
+        try {
+          const addNewLovers = await axios({
+            method: "post",
+            url: "/love/add",
+            baseURL: `http://localhost:${PORT}`,
+            headers: {
+              "botid": BOT_ID
+            },
+            data: {
+              user_id: user,
+              hours: hours,
+              minutes: minutes
             }
-          }
-          catch(error) {
-            logsEmiter(`An error occured [commandSendLove] : \r\n ${error}`);
+          });
+
+          if(addNewLovers.status === 200) {
             interaction.reply({
-              content: `Une erreur est survenue. Réessaie plus tard.`
-            })
+              content: `Je t'enverrais du love tout les jours à ${hours}:${minutes}`
+            });
           }
         }
-    });
+        catch(error) {
+          logsEmiter(`An error occured [commandSendLove] : \r\n ${error}`);
+          interaction.reply({
+            content: `Une erreur est survenue. Réessaie plus tard.`
+          })
+        }
+      }
+  });
 }
 
 module.exports = { commandSendLove }
