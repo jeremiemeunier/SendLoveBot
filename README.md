@@ -16,4 +16,4 @@ SendLoveBot work in private message, you can send two commands :
 ## Futur updates
 
 - [ ] Add **/list** command to list all of your scheduled love message
-- [ ] Add personalised message when you register a love message
+- [ ] Add personalized message when you register a love message
