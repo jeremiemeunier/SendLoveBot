@@ -27,7 +27,7 @@ mongoose.connect(MONGODB_URL);
 // ##### BOT SETUP ##### \\
 
 const { logsEmiter, logsBooter } = require('./functions/logs');
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, ActivityType } = require('discord.js');
 const client = new Client({
   intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageTyping, GatewayIntentBits.MessageContent],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
@@ -86,6 +86,12 @@ const botBooter = async () => {
     try {
       logsEmiter('Start love service');
       sendLove(client);
+
+      client.user.setPresence({
+        activities: [{ name: `J'envoie du love toute la journée`,
+        type: ActivityType.Custom
+        }]
+      });
     }
     catch(error) { logsEmiter(`Love Server : ⚠️  | An error occured : ${error}`); }
   }
