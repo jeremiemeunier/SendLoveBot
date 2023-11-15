@@ -1,6 +1,6 @@
 {
   "name": "lebotdulove",
-  "version": "0.1.0-beta.0.1",
+  "version": "0.1.0",
   "description": "A bot who send love all days of your life",
   "main": "index.js",
   "scripts": {
