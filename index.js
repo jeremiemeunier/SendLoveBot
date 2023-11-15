@@ -27,7 +27,6 @@ mongoose.connect(MONGODB_URL);
 // ##### BOT SETUP ##### \\
 
 const { logsEmiter, logsBooter } = require('./functions/logs');
-const { version } = require('./package.json');
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const client = new Client({
   intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageTyping, GatewayIntentBits.MessageContent],
