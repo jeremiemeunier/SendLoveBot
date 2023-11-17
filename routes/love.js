@@ -58,6 +58,10 @@ router.get("/love/user/list", isBot, async (req, res) => {
   }
 });
 
+router.delete("/love/remove/:id", isBot, async (req, res) => {
+  const _id = id;
+});
+
 router.delete("/love/exit", isBot, async (req, res) => {
   const { user_id } = req.body;
 
