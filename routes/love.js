@@ -20,6 +20,7 @@ router.post("/love/add", isBot, async (req, res) => {
   }
   catch(error) {
     logsEmiter(`API Server : ⚠️  | ${error}`);
+    res.status(500);
   }
 });
 
@@ -35,7 +36,25 @@ router.get("/love/list", isBot, async (req, res) => {
     else { res.status(404); }
   }
   catch(error) {
-    logsEmiter(error);
+    logsEmiter(`API Server : ⚠️  | ${error}`);
+    res.status(500);
+  }
+});
+
+router.get("/love/user/list", isBot, async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const getAllUserRegistre = await Love.find({ user_id: user_id });
+    
+    if(getAllUserRegistre.length > 0) {
+      res.status(200).json({ data: getAllUserRegistre });
+    }
+    else { res.status(404); }
+  }
+  catch(error) {
+    logsEmiter(`API Server : ⚠️  | ${error}`);
+    res.status(500);
   }
 });
 
@@ -57,7 +76,10 @@ router.delete("/love/exit", isBot, async (req, res) => {
       res.status(200).json({ message: 'All things are good' });
     }
   }
-  catch(error) { res.status(500); }
+  catch(error) {
+    logsEmiter(`API Server : ⚠️  | ${error}`);
+    res.status(500);
+  }
 });
 
 module.exports = router;
