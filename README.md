@@ -6,6 +6,8 @@ If you want love all of days, click on link below to add the bot at your Discord
 
 [Add SendLoveBot on your Discord server](https://discord.com/api/oauth2/authorize?client_id=1174351556209029202&permissions=0&scope=bot)
 
+[Send me a message](https://discordapp.com/users/1174351556209029202)
+
 ## Commands
 
 SendLoveBot work in private message, you can send two commands :
