@@ -2,6 +2,7 @@ const { PORT, BOT_ID } = require('../../../config/secret.json');
 const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { logsEmiter } = require('../../../functions/logs');
 const axios = require('axios');
+const { color } = require ('../../../config/settings.json');
 
 const commandListLove = (client) => {
   client.on(Events.InteractionCreate, async interaction => {
@@ -31,9 +32,11 @@ const commandListLove = (client) => {
 
           allLoves.map((item, index) => {
             const { _id, hours, minutes } = item;
-            const loveEmbed = new EmbedBuilder()
-              .setTitle(`Love message ${index + 1}`)
-              .setDescription(`Tout les jours à ${hours}:${minutes.length === 2 ? minutes : '0' + minutes}`);
+            const loveEmbed = new EmbedBuilder({
+              title: `Love message ${index + 1}`,
+              description: `Tout les jours à ${hours}:${minutes.length === 2 ? minutes : '0' + minutes}`,
+              color: color
+            });
             const loveButton = new ActionRowBuilder()
               .addComponents(
                 new ButtonBuilder()
