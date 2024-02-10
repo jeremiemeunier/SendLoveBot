@@ -11,11 +11,17 @@ const commands =
             "required": true
         },
         {
-          "name": "minutes",
-          "description": "Une minute précise ?",
-          "type": 4,
-          "required": true
-      }
+            "name": "minutes",
+            "description": "Une minute précise ?",
+            "type": 4,
+            "required": true
+        },
+        {
+            "name": "message",
+            "description": "Un message particulier ?",
+            "type": 3,
+            "required": false
+        }
     ]
 };
 

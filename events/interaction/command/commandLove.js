@@ -30,7 +30,7 @@ const commandSendLove = (client) => {
 
           if(addNewLovers.status === 200) {
             interaction.reply({
-              content: `Je t'enverrais du love tout les jours à ${hours}:${minutes}`
+              content: `Je t'enverrais du love tout les jours à ${hours}:${minutes.length === 2 ? minutes : '0' + minutes}`
             });
           }
         }
