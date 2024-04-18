@@ -9,4 +9,4 @@ COPY package.json ./
 RUN npm i
 
 COPY . .
-CMD [ "node", "--env-file=.env", "index.js" ]
+CMD [ "npm", "run", "prod" ]
