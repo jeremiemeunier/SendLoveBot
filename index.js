@@ -1,64 +1,61 @@
-const { BOT_TOKEN, PORT, MONGODB_URL } = require('./config/secret.json');
-
-
 // ##### API ##### \\
 
-const express = require("express");
+import express, { json } from "express";
 const app = express();
-const RateLimit = require('express-rate-limit');
-const cors = require("cors");
-const mongoose = require("mongoose");
+import RateLimit from "express-rate-limit";
+import cors from "cors";
+import { connect } from "mongoose";
 
 const limiter = RateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-})
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
 app.use(limiter);
-app.use(express.json());
+app.use(json());
 app.use(cors());
-
 
 // ##### BDD ##### \\
 
-mongoose.connect(MONGODB_URL);
-
+connect(process.env.MONGODB_URL);
 
 // ##### BOT SETUP ##### \\
 
-const { logsEmiter, logsBooter } = require('./functions/logs');
-const { Client, GatewayIntentBits, Partials, ActivityType } = require('discord.js');
+import { logsEmiter, logsBooter } from "./functions/logs";
+import { Client, GatewayIntentBits, Partials, ActivityType } from "discord.js";
 const client = new Client({
-  intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageTyping, GatewayIntentBits.MessageContent],
+  intents: [
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.MessageContent,
+  ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
 // ##### EVENTS ##### \\
-const { interactionCreateEventInit } = require('./events/interactionCreateEvent');
-const { commandRegister } = require('./functions/commandsRegister');
-const { sendLove } = require('./functions/sendLove');
+import { interactionCreateEventInit } from "./events/interactionCreateEvent";
+import { commandRegister } from "./functions/commandsRegister";
+import { sendLove } from "./functions/sendLove";
 
 // ##### FIX ##### \\
 
 if (!String.prototype.endsWith) {
-  Object.defineProperty(String.prototype, 'endsWith', {
-      enumerable: false,
-      configurable: false,
-      writable: false,
-      value: function (searchString, position) {
-          position = position || this.length;
-          position = position - searchString.length;
-          var lastIndex = this.lastIndexOf(searchString);
-          return lastIndex !== -1 && lastIndex === position;
-      }
+  Object.defineProperty(String.prototype, "endsWith", {
+    enumerable: false,
+    configurable: false,
+    writable: false,
+    value: function (searchString, position) {
+      position = position || this.length;
+      position = position - searchString.length;
+      var lastIndex = this.lastIndexOf(searchString);
+      return lastIndex !== -1 && lastIndex === position;
+    },
   });
 }
 
 // ##### APP ##### \\
 
-const botBooter = async () => {
-
-  logsBooter();
+export const botBooter = async () => {
   logsEmiter(`Hello`);
 
   commandRegister();
@@ -66,40 +63,50 @@ const botBooter = async () => {
 
   try {
     // API
-    const loveListRoute = require('./routes/love');
+    const loveListRoute = require("./routes/love").default;
 
     app.use(loveListRoute);
 
     app.get("/", (req, res) => {
-      res.status(200).json({ message: "Bienvenue sur le Backend de SnedLoveBot" });
+      res
+        .status(200)
+        .json({ message: "Bienvenue sur le Backend de SnedLoveBot" });
     });
 
     // Route 404
     app.all("*", (req, res) => {
       res.status(404).json({ message: "This route do not exist" });
     });
-    
-    app.listen(PORT, () => {
-      logsEmiter(`API Server : 🚀 | Started on port ${PORT}`);
+
+    app.listen(process.env.PORT, () => {
+      logsEmiter(`API Server : 🚀 | Started on port ${process.env.PORT}`);
     });
 
     try {
-      logsEmiter('Start love service');
+      logsEmiter("Start love service");
       sendLove(client);
 
       client.user.setPresence({
-        activities: [{ name: `J'envoie du love toute la journée`,
-        type: ActivityType.Custom
-        }]
+        activities: [
+          {
+            name: `J'envoie du love toute la journée`,
+            type: ActivityType.Custom,
+          },
+        ],
       });
+    } catch (error) {
+      logsEmiter(`Love Server : ⚠️  | An error occured : ${error}`);
     }
-    catch(error) { logsEmiter(`Love Server : ⚠️  | An error occured : ${error}`); }
+  } catch (error) {
+    logsEmiter(`API Server : ⚠️  | An error occured on api : ${error}`);
   }
-  catch(error) { logsEmiter(`API Server : ⚠️  | An error occured on api : ${error}`); }
-}
+};
 
 try {
-  client.on('ready', () => { botBooter(); });
-  client.login(BOT_TOKEN);
+  client.on("ready", () => {
+    botBooter();
+  });
+  client.login(process.env.BOT_TOKEN);
+} catch (error) {
+  console.log(error);
 }
-catch(error) { console.log(error); }

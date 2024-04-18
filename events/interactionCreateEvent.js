@@ -1,14 +1,10 @@
-const { commandExitLove } = require('./interaction/command/commandExit');
-const { commandSendLove } = require('./interaction/command/commandLove');
-const { commandListLove } = require('./interaction/command/commandList');
+import { commandExitLove } from "./interaction/command/commandExit";
+import { commandSendLove } from "./interaction/command/commandLove";
+import { commandListLove } from "./interaction/command/commandList";
 
-const interactionCreateEventInit = (clientItem) => {
-    const client = clientItem;
-
-    // Commands
-    commandSendLove(client);
-    commandExitLove(client);
-    commandListLove(client);
-}
-
-module.exports = { interactionCreateEventInit }
+export const interactionCreateEventInit = (client) => {
+  // Commands
+  commandSendLove(client);
+  commandExitLove(client);
+  commandListLove(client);
+};

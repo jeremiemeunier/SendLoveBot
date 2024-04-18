@@ -1,47 +1,45 @@
-const { PORT, BOT_ID } = require('../../../config/secret.json');
-const { Events } = require('discord.js');
-const { logsEmiter } = require('../../../functions/logs');
-const axios = require('axios');
+import { Events } from "discord.js";
+import { logsEmiter } from "../../../functions/logs";
+import axios from "axios";
 
-const commandSendLove = (client) => {
-  client.on(Events.InteractionCreate, async interaction => {
-      if (!interaction.isChatInputCommand()) return;
-          const { commandName } = interaction;
-      
-      if(commandName === 'love') {
-        const hours = interaction.options.getInteger('hours').toString();
-        const minutes = interaction.options.getInteger('minutes').toString();
-        const user = interaction.user.id;
+export const commandSendLove = (client) => {
+  client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+    const { commandName } = interaction;
 
-        try {
-          const addNewLovers = await axios({
-            method: "post",
-            url: "/love/add",
-            baseURL: `http://localhost:${PORT}`,
-            headers: {
-              "botid": BOT_ID
-            },
-            data: {
-              user_id: user,
-              hours: hours,
-              minutes: minutes
-            }
-          });
+    if (commandName === "love") {
+      const hours = interaction.options.getInteger("hours").toString();
+      const minutes = interaction.options.getInteger("minutes").toString();
+      const user = interaction.user.id;
 
-          if(addNewLovers.status === 200) {
-            interaction.reply({
-              content: `Je t'enverrais du love tout les jours à ${hours}:${minutes.length === 2 ? minutes : '0' + minutes}`
-            });
-          }
-        }
-        catch(error) {
-          logsEmiter(`An error occured [commandSendLove] : \r\n ${error}`);
+      try {
+        const addNewLovers = await axios({
+          method: "post",
+          url: "/love/add",
+          baseURL: `http://localhost:${process.env.PORT}`,
+          headers: {
+            botid: process.env.BOT_ID,
+          },
+          data: {
+            user_id: user,
+            hours: hours,
+            minutes: minutes,
+          },
+        });
+
+        if (addNewLovers.status === 200) {
           interaction.reply({
-            content: `Une erreur est survenue. Réessaie plus tard.`
-          })
+            content: `Je t'enverrais du love tout les jours à ${hours}:${minutes.length === 2 ? minutes : "0" + minutes}`,
+            ephemeral: true,
+          });
         }
+      } catch (error) {
+        logsEmiter(`An error occured [commandSendLove] : \r\n ${error}`);
+        interaction.reply({
+          content: `Une erreur est survenue. Réessaie plus tard.`,
+          ephemeral: true,
+        });
       }
+    }
   });
-}
-
-module.exports = { commandSendLove }
+};

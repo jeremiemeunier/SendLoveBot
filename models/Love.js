@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+import { model } from "mongoose";
 
-const love = mongoose.model("Love", {
-    hours: String,
-    minutes: String,
-    user_id: String
+const love = model("Love", {
+  hours: String,
+  minutes: String,
+  user_id: String,
 });
 
-module.exports = love;
+export default love;

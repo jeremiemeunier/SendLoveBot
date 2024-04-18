@@ -1,9 +1,7 @@
-const { PORT, BOT_ID } = require('../config/secret.json');
-const axios = require('axios');
-const { logsEmiter } = require('./logs');
+import axios from "axios";
+import { logsEmiter } from "./logs";
 
-const sendLove = (client) => {
-
+export const sendLove = (client) => {
   setInterval(async () => {
     try {
       const now = new Date();
@@ -13,33 +11,33 @@ const sendLove = (client) => {
       const allLoveMessages = await axios({
         method: "get",
         url: "/love/list",
-        baseURL: `http://localhost:${PORT}`,
+        baseURL: `http://localhost:${process.env.PORT}`,
         headers: {
-          "botid": BOT_ID
+          botid: process.env.BOT_ID,
         },
         data: {
           hours: hours,
-          minutes: minutes
-        }
+          minutes: minutes,
+        },
       });
 
       const allUsers = allLoveMessages.data.data;
 
       allUsers.map((item) => {
         const { user_id } = item;
-        
+
         try {
           const user = client.users.fetch(user_id, false).then((user) => {
             user.send(`It's love time ! Je te love ❤️`);
           });
+        } catch (error) {
+          logsEmiter(error);
         }
-        catch(error) { logsEmiter(error); }
-      })
-    }
-    catch(error) {
-      if(error.request.status !== 404) { console.log(error); }
+      });
+    } catch (error) {
+      if (error.request.status !== 404) {
+        console.log(error);
+      }
     }
   }, 60000);
-}
-
-module.exports = { sendLove }
+};
