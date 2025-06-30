@@ -1,0 +1,31 @@
+{
+  "name": "pastille-love",
+  "version": "1.0.0",
+  "main": "src/server.ts",
+  "scripts": {
+    "prod": "infisical --env=\"prod\" --path=\"/pastille-love\" run --projectId 1a946831-528f-4a11-8380-73cc3f859668 -- ts-node -r dotenv/config -r tsconfig-paths/register src/server.ts",
+    "dev": "infisical --path=\"/pastille-love\" run --projectId 1a946831-528f-4a11-8380-73cc3f859668 -- nodemon --exec \"ts-node -r dotenv/config -r tsconfig-paths/register src/server.ts\"",
+    "devdist": "infisical --env=\"prod\" --path=\"/pastille-love\" run --projectId 1a946831-528f-4a11-8380-73cc3f859668 -- nodemon --exec \"ts-node -r dotenv/config -r tsconfig-paths/register src/server.ts\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.1",
+    "node-cron": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.7",
+    "@types/node-cron": "^3.0.11",
+    "dotenv": "^17.0.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3"
+  }
+}
